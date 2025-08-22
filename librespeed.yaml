@@ -218,7 +218,6 @@ data:
       {
         "name": "Amsterdam, Netherlands",
         "server": "http://spd-nlsrv.hostkey.com/",
-        "id": 1,
         "dlURL": "garbage",
         "ulURL": "empty",
         "pingURL": "empty",
@@ -227,7 +226,6 @@ data:
       {
         "name": "Helsinki, Finland",
         "server": "http://spd-fisrv.hostkey.com/",
-        "id": 2,
         "dlURL": "garbage",
         "ulURL": "empty",
         "pingURL": "empty",
@@ -236,7 +234,6 @@ data:
       {
         "name": "NewYork, USA",
         "server": "http://spd-uswb.hostkey.com/",
-        "id": 3,
         "dlURL": "garbage",
         "ulURL": "empty",
         "pingURL": "empty",
@@ -245,7 +242,6 @@ data:
       {
         "name": "Frankfurt, Germany",
         "server": "http://spd-desrv.hostkey.com/",
-        "id": 4,
         "dlURL": "garbage",
         "ulURL": "empty",
         "pingURL": "empty",
@@ -254,7 +250,6 @@ data:
       {
         "name": "Reykjavik, Iceland",
         "server": "http://spd-icsrv.hostkey.com/",
-        "id": 5,
         "dlURL": "garbage",
         "ulURL": "empty",
         "pingURL": "empty",
@@ -263,7 +258,6 @@ data:
       {
         "name": "Türkiy, Istanbul",
         "server": "http://spd-tr.hostkey.com/",
-        "id": 6,
         "dlURL": "garbage",
         "ulURL": "empty",
         "pingURL": "empty",
