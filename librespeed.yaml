@@ -11,7 +11,37 @@ kind: Secret
 metadata:
   name: registrysecret
   namespace: final
+  labels:
+    app.kubernetes.io/instance: librespeed
 type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+data:
+  DB_PASSWORD: cGFzc3dvcmQ=
+  DB_USERNAME: cm9vdA==
+kind: Secret
+metadata:
+  name: librespeed-secret
+  namespace: final
+  labels:
+    app.kubernetes.io/instance: librespeed
+---
+apiVersion: v1
+data:
+  MODE: "frontend"
+  TELEMETRY: "true"
+  ENABLE_ID_OBFUSCATION: "true"
+  REDACT_IP_ADDRESSES: "false"
+  DB_TYPE: "mysql"
+  DB_HOSTNAME: "mysql"
+  DB_PORT: "3306"
+  DB_NAME: "speedtest_telemetry"
+kind: ConfigMap
+metadata:
+  name: librespeed-env
+  namespace: final
+  labels:
+    app.kubernetes.io/instance: librespeed
 ---
 apiVersion: v1
 data:
@@ -244,6 +274,49 @@ kind: ConfigMap
 metadata:
   name: librespeed-servers
   namespace: final
+  labels:
+    app.kubernetes.io/instance: librespeed
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: librespeed
+    app.kubernetes.io/instance: librespeed
+  name: librespeed-svc
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http-web
+  selector:
+    app: librespeed-svc
+    app.kubernetes.io/instance: librespeed
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: librespeed-ingress
+  namespace: final
+  labels:
+    app: librespeed
+    app.kubernetes.io/instance: librespeed
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http: 
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: librespeed-srv
+            port:
+              number: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -269,12 +342,20 @@ spec:
       - name: librespeed
         image: registry.rebrainme.com/workshops/middle/kubernetes-local/newplatform_autochecks/speedtest:5.3
         ports:
-        - containerPort: 80
+          - name: http-web
+            containerPort: 8080
+        envFrom:
+          - configMapRef:
+              name: librespeed-env
+          - secretRef:
+              name: librespeed-secret
         volumeMounts:
           - name: librespeed-servers
             mountPath: /servers.json
             subPath: servers.json 
-    volumes:
-      - name: librespeed-servers
-        configMap:
-          name: librespeed-servers
+      volumes:
+        - name: librespeed-servers
+          configMap:
+            name: librespeed-servers
+      imagePullSecrets:
+        - name: registrysecret
