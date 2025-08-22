@@ -10,7 +10,8 @@
 В данном репозитории три манифеста:
 - `local-path-storage.yaml` - поднимает local-path-provisioner (https://github.com/rancher/local-path-provisioner)
 - `mysql.yaml` - поднимает СУБД Mysql в отдельном namespace
-- `librespeed.yaml` - поднимает приложение Librespeed в режиме frontend 
+- `librespeed.yaml` - поднимает приложение Librespeed в режиме frontend
+  
 Для развёртывания приложения копируем репозиторий и выполняем:
 ```
 kubectl apply -f .
