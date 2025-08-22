@@ -33,7 +33,7 @@ data:
   ENABLE_ID_OBFUSCATION: "true"
   REDACT_IP_ADDRESSES: "false"
   DB_TYPE: "mysql"
-  DB_HOSTNAME: "mysql"
+  DB_HOSTNAME: "mysql.db.svc.cluster.local"
   DB_PORT: "3306"
   DB_NAME: "speedtest_telemetry"
 kind: ConfigMap
@@ -284,14 +284,15 @@ metadata:
     app: librespeed
     app.kubernetes.io/instance: librespeed
   name: librespeed-svc
+  namespace: final
 spec:
   ports:
   - name: http
-    port: 8080
+    port: 80
     protocol: TCP
     targetPort: http-web
   selector:
-    app: librespeed-svc
+    app: librespeed
     app.kubernetes.io/instance: librespeed
   type: ClusterIP
 ---
@@ -314,9 +315,9 @@ spec:
         path: "/"
         backend:
           service:
-            name: librespeed-srv
+            name: librespeed-svc
             port:
-              number: 8080
+              number: 80
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -343,7 +344,7 @@ spec:
         image: registry.rebrainme.com/workshops/middle/kubernetes-local/newplatform_autochecks/speedtest:5.3
         ports:
           - name: http-web
-            containerPort: 8080
+            containerPort: 80
         envFrom:
           - configMapRef:
               name: librespeed-env
